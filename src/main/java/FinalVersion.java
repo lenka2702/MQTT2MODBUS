@@ -62,7 +62,7 @@ public class FinalVersion {
             client.connect();
 
             //System.out.println("Sub na temu: " + topic);
-            for(int i = 0; i < topic.length; i++) { //ovo mi se ne svidja kako sam napisala
+            for(int i = 0; i < topic.length; i++) { 
 
                 System.out.println("Sub na temu: " + topic[i]);
 
