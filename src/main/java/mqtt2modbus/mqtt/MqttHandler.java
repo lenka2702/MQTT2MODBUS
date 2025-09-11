@@ -47,12 +47,12 @@ public class MqttHandler {
 
                         SensorData data = gson.fromJson(message, SensorData.class);
 
-                        if (data.sensorId != null && data.EnvironmentalData != null) {
-                            SensorInfo info = new SensorInfo(data.deviceType, data.EnvironmentalData.values);
-                            sensorMap.put(data.sensorId, info);
+                        if (data.getSensorId() != null && data.getEnvironmentalData() != null) {
+                            SensorInfo info = new SensorInfo(data.getDeviceType(), data.getEnvironmentalData().getValues());
+                            sensorMap.put(data.getSensorId(), info);
 
-                            ByteBuf buf = Unpooled.buffer(2 * info.values.length);
-                            for (int val : info.values) {
+                            ByteBuf buf = Unpooled.buffer(2 * info.getValues().length);
+                            for (int val : info.getValues()) {
                                 buf.writeShort(val);
                             }
 
