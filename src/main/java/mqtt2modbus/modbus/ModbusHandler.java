@@ -72,8 +72,10 @@ public class ModbusHandler implements IModbusHandler {
                     for (int i = 0; i < quantity; i++)
                         values[i] = buf.readShort();
 
-                    for (int i = 0; i < quantity; i++)
-                            System.out.println("Registar[" + i + "] = " + values[i]);
+                    System.out.print("Pročitani registri: ");
+                    for (int val : values)
+                        System.out.print(val + " ");
+                    System.out.println();
 
                 }
             });
