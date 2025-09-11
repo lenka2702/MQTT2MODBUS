@@ -1,17 +1,16 @@
 package mqtt2modbus.mqtt;
 
 import com.google.gson.Gson;
+import mqtt2modbus.modbus.IModbusHandler;
+import mqtt2modbus.modbus.ModbusHandler;
 import mqtt2modbus.models.SensorData;
 import mqtt2modbus.models.SensorInfo;
-import mqtt2modbus.modbus.ModbusHandler;
 import org.eclipse.paho.client.mqttv3.*;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MqttHandler {
+public class MqttHandler implements IMqttHandler {
 
     private final String broker;
     private final String[] topics;
@@ -23,8 +22,9 @@ public class MqttHandler {
     public MqttHandler(String broker, String[] topic, ModbusHandler modbusHandler) {
         this.broker = broker;
         this.topics = topic;
-        this.modbusHandler = modbusHandler;
+        this.modbusHandler = modbusHandler ;
     }
+
 
 
     public void start(){
@@ -51,9 +51,9 @@ public class MqttHandler {
                             SensorInfo info = new SensorInfo(data.getDeviceType(), data.getEnvironmentalData().getValues());
                             sensorMap.put(data.getSensorId(), info);
 
-                            int[] valuesSensoInfo = info.getValues();
+                            int[] valuesSensorInfo = info.getValues();
 
-                            modbusHandler.write(brojac * valuesSensoInfo.length , valuesSensoInfo);
+                            modbusHandler.write(brojac * valuesSensorInfo.length , valuesSensorInfo);
                             brojac++;
                         }
                     }

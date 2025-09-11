@@ -11,7 +11,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import io.netty.buffer.Unpooled;
 
-public class ModbusHandler {
+public class ModbusHandler implements IModbusHandler {
+
     private final ModbusTcpMaster master;
     private final int slaveId;
 
@@ -55,7 +56,6 @@ public class ModbusHandler {
             e.printStackTrace();
         }
     }
-
 
 
 }
