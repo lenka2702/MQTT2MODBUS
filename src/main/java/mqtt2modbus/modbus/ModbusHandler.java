@@ -2,8 +2,10 @@ package mqtt2modbus.modbus;
 
 import com.digitalpetri.modbus.master.ModbusTcpMaster;
 import com.digitalpetri.modbus.master.ModbusTcpMasterConfig;
+import com.digitalpetri.modbus.requests.ReadHoldingRegistersRequest;
 import com.digitalpetri.modbus.requests.WriteMultipleRegistersRequest;
 import com.digitalpetri.modbus.requests.WriteSingleRegisterRequest;
+import com.digitalpetri.modbus.responses.ReadHoldingRegistersResponse;
 import com.digitalpetri.modbus.responses.WriteMultipleRegistersResponse;
 import com.digitalpetri.modbus.responses.WriteSingleRegisterResponse;
 import io.netty.buffer.ByteBuf;
@@ -52,6 +54,29 @@ public class ModbusHandler implements IModbusHandler {
             WriteSingleRegisterRequest req = new WriteSingleRegisterRequest(adress, value);
             CompletableFuture<WriteSingleRegisterResponse> future = master.sendRequest(req, slaveId);
             future.get();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void read(int adress, int quantity) {
+        try {
+            ReadHoldingRegistersRequest req = new ReadHoldingRegistersRequest(adress, quantity);
+            CompletableFuture<ReadHoldingRegistersResponse> future = master.sendRequest(req, slaveId);
+
+            future.thenAccept(resp -> {
+                if (resp != null) {
+                    ByteBuf buf = resp.getRegisters();
+                    int[] values = new int[quantity];
+
+                    for (int i = 0; i < quantity; i++)
+                        values[i] = buf.readShort();
+
+                    for (int i = 0; i < quantity; i++)
+                            System.out.println("Registar[" + i + "] = " + values[i]);
+
+                }
+            });
         }catch (Exception e) {
             e.printStackTrace();
         }
