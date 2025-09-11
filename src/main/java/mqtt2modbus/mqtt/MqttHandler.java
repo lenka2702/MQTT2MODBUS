@@ -51,12 +51,9 @@ public class MqttHandler {
                             SensorInfo info = new SensorInfo(data.getDeviceType(), data.getEnvironmentalData().getValues());
                             sensorMap.put(data.getSensorId(), info);
 
-                            ByteBuf buf = Unpooled.buffer(2 * info.getValues().length);
-                            for (int val : info.getValues()) {
-                                buf.writeShort(val);
-                            }
+                            int[] valuesSensoInfo = info.getValues();
 
-                            modbusHandler.writeValues(brojac * 5, buf);
+                            modbusHandler.write(brojac * valuesSensoInfo.length , valuesSensoInfo);
                             brojac++;
                         }
                     }
