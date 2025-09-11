@@ -102,25 +102,3 @@ public class FinalVersion {
     }
 }
 
-/*
-client.subscribe(topics, (topic, mqttMessage) -> {
-    String message = new String(mqttMessage.getPayload());
-    System.out.println(topic + " Primljeno: " + message);
-
-    SensorData data = gson.fromJson(message, SensorData.class);
-
-    if (data.sensorId != null && data.EnvironmentalData != null) {
-        SensorInfo info = new SensorInfo(data.deviceType, data.EnvironmentalData.values);
-        sensorMap.put(data.sensorId, info);
-
-        ByteBuf buf = Unpooled.buffer(2 * info.values.length);
-        for (int val : info.values) {
-            buf.writeShort(val);
-        }
-
-        modbusHandler.writeValues(brojac * 5, buf);
-        brojac++;
-    }
-});
-
- */
