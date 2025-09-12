@@ -27,8 +27,7 @@ public class ModbusHandler implements IModbusHandler {
         this.slaveId = slaveId;
     }
 
-    public void write(int startAdress, int[] values)
-    {
+    public void write(int startAdress, int[] values) {
         if(values.length == 1)
             writesingle(startAdress, values[0]);
         else
@@ -43,7 +42,9 @@ public class ModbusHandler implements IModbusHandler {
             WriteMultipleRegistersRequest req = new WriteMultipleRegistersRequest(
                     adress, values.length, buf);
             CompletableFuture<WriteMultipleRegistersResponse> future = master.sendRequest(req, slaveId);
-            future.get();
+            future.thenAccept(response -> {});
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +54,7 @@ public class ModbusHandler implements IModbusHandler {
         try {
             WriteSingleRegisterRequest req = new WriteSingleRegisterRequest(adress, value);
             CompletableFuture<WriteSingleRegisterResponse> future = master.sendRequest(req, slaveId);
-            future.get();
+            future.thenAccept(response -> {});
         }catch (Exception e) {
             e.printStackTrace();
         }

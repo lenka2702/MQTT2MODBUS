@@ -1,7 +1,5 @@
 package mqtt2modbus;
 
-import mqtt2modbus.modbus.IModbusHandler;
-import mqtt2modbus.mqtt.IMqttHandler;
 import mqtt2modbus.mqtt.MqttHandler;
 import mqtt2modbus.modbus.ModbusHandler;
 
