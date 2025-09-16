@@ -1,0 +1,5 @@
+broker: tcp://localhost:1883
+fileName: DataForDevices.csv
+host: 127.0.0.1
+port: 502
+slaveID: 1

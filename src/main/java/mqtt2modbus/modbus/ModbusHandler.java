@@ -25,7 +25,7 @@ public class ModbusHandler implements IModbusHandler {
         this.master = new ModbusTcpMaster(config);
         this.master.connect().get();
         this.slaveId = slaveId;
-    }
+    }//ovde ce trebati neki exepcion jer baca gresku jer nije pokrenuta simulacija
 
     public void write(int startAdress, int[] values) {
         if(values.length == 1)
