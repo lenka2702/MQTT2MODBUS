@@ -1,14 +1,15 @@
 package mqtt2modbus.mqtt;
 
 import com.google.gson.Gson;
-import mqtt2modbus.modbus.ModbusHandler;
+import mqtt2modbus.file.IFileHandler;
+import mqtt2modbus.modbus.IModbusHandler;
 import mqtt2modbus.models.SensorData;
 import mqtt2modbus.models.SensorInfo;
 import org.eclipse.paho.client.mqttv3.*;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 public class MqttHandler implements IMqttHandler {
 
@@ -16,13 +17,15 @@ public class MqttHandler implements IMqttHandler {
     private final String[] topics;
     private final Gson gson = new Gson();
     private final Map<String, SensorInfo> sensorMap = new HashMap<>();
-    private int brojac = 0;
-    private final ModbusHandler modbusHandler;
+    private final IModbusHandler modbusHandler;
+    private final IFileHandler fileHandler;
 
-    public MqttHandler(String broker, String[] topic, ModbusHandler modbusHandler) {
+
+    public MqttHandler(String broker, String[] topic, IModbusHandler modbusHandler, IFileHandler fileHandler) throws MqttException {
         this.broker = broker;
         this.topics = topic;
         this.modbusHandler = modbusHandler;
+        this.fileHandler = fileHandler;
     }
 
 
@@ -53,7 +56,7 @@ public class MqttHandler implements IMqttHandler {
 
                 @Override
                 public void connectionLost(Throwable cause) {
-                    System.out.println("Veza izgubljena: " + cause.getMessage());
+                    System.out.println(cause.getMessage());
                 }
 
                 @Override
@@ -82,10 +85,9 @@ public class MqttHandler implements IMqttHandler {
 
                     SensorInfo info = new SensorInfo(data.getDeviceType(), data.getEnvironmentalData().getValues());
                     sensorMap.put(data.getSensorId(), info);
-
                     int[] valuesSensorInfo = info.getValues();
-                    modbusHandler.write(brojac * valuesSensorInfo.length , valuesSensorInfo);
-                    brojac++;
+
+                    fileHandler.dataFiltering(data.getDeviceType(), topic, valuesSensorInfo, modbusHandler);
 
                 }
             }
