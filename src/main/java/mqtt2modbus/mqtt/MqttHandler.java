@@ -7,11 +7,14 @@ import mqtt2modbus.models.SensorData;
 import mqtt2modbus.models.SensorInfo;
 import org.eclipse.paho.client.mqttv3.*;
 import com.google.gson.JsonSyntaxException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.util.*;
 
 public class MqttHandler implements IMqttHandler {
+
+    private static final Logger logger = LogManager.getLogger(MqttHandler.class);
 
     private final String broker;
     private final String[] topics;
@@ -22,10 +25,15 @@ public class MqttHandler implements IMqttHandler {
 
 
     public MqttHandler(String broker, String[] topic, IModbusHandler modbusHandler, IFileHandler fileHandler) throws MqttException {
+        if (broker == null || topic == null || modbusHandler == null || fileHandler == null) {
+            logger.fatal("Bar jedan od parametara za kontruktor MqttHandelr je null");
+            throw new IllegalArgumentException("Parametri konstruktora ne smeju biti null.");
+        }
         this.broker = broker;
         this.topics = topic;
         this.modbusHandler = modbusHandler;
         this.fileHandler = fileHandler;
+        logger.debug("MqttHandler uspešno inicijalizovan za broker: {}", broker);
     }
 
 
@@ -41,45 +49,56 @@ public class MqttHandler implements IMqttHandler {
             client.setCallback(new MqttCallbackExtended() {
                 @Override
                 public void connectComplete(boolean reconnect, String serverURI) {
-                    System.out.println("Subscriber povezan na: " + serverURI + (reconnect ? " (reconnect)" : ""));
+                    logger.info("Povezan na: {} {}", serverURI, (reconnect ? "(reconnect)" : ""));
                     try {
-
                         for (String topic : topics) {
-                            client.subscribe(topic, (t,mqttMessage) -> handleMessage(t, mqttMessage));
-                            System.out.println("Resub na temu: " + topic);
+                            if (topic != null && !topic.isEmpty()){
+                                client.subscribe(topic, (t, mqttMessage) -> handleMessage(t, mqttMessage));
+                                logger.debug("Subscribovan na temu: {}", topic);
+                            }else
+                                logger.warn("Pokušaj subscribe na prazan topic");
                         }
 
                     } catch (MqttException e) {
-                        e.printStackTrace();
+                        logger.error("Greška prilikom subscribe-a na teme", e);
                     }
                 }
 
                 @Override
                 public void connectionLost(Throwable cause) {
-                    System.out.println(cause.getMessage());
+                    logger.error("MQTT konekcija izgubljena: {}", cause.getMessage(), cause);
                 }
 
                 @Override
-                public void messageArrived(String topic, MqttMessage message) {}
+                public void messageArrived(String topic, MqttMessage message) {
+                    logger.trace("Poruka stigla na topic {}: {}", topic, new String(message.getPayload()));
+                }
 
                 @Override
-                public void deliveryComplete(IMqttDeliveryToken token) {}
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                    logger.debug("MQTT isporuka završena za token: {}", token);
+                }
             });
 
             client.connect(options);
+            logger.info("MQTT klijent uspešno konektovan.");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.fatal("Greška prilikom konektovanja na MQTT broker", e);
         }
     }
 
     private void handleMessage(String topic, MqttMessage mqttMessage) {
+        if (mqttMessage == null || mqttMessage.getPayload() == null) {
+            logger.warn("Primljena prazna MQTT poruka na topicu: {}", topic);
+            return;
+        }
         String message = new String(mqttMessage.getPayload());
 
         try {
             SensorData data = gson.fromJson(message, SensorData.class);
             if (data != null) {
-                System.out.println("[" + topic + "] Primljeno: " + message);
+                logger.info("[{}] Primljena validna poruka: {}", topic, message);
 
                 if (data.getSensorId() != null && data.getEnvironmentalData() != null && data.getEnvironmentalData().getValues() != null) {
 
@@ -87,12 +106,21 @@ public class MqttHandler implements IMqttHandler {
                     sensorMap.put(data.getSensorId(), info);
                     int[] valuesSensorInfo = info.getValues();
 
-                    fileHandler.dataFiltering(data.getDeviceType(), topic, valuesSensorInfo, modbusHandler);
-
+                    try {
+                        fileHandler.dataFiltering(data.getDeviceType(), topic, valuesSensorInfo, modbusHandler);
+                    }catch (Exception e) {
+                        logger.error("Greška u fileHandler.dataFiltering za: {}", data.getSensorId(), e);
+                    }
+                }else {
+                    logger.warn("Primljeni podaci nisu kompletni: {}", message);
                 }
+            }else {
+                logger.warn("Primljena poruka nije mogla biti mapirana u SensorData: {}", message);
             }
         } catch (JsonSyntaxException e) {
-            System.out.println("Nije validan JSON: " + message);
+            logger.error("Nije validan JSON: {}", message, e);
+        }catch (Exception e) {
+            logger.error("Neočekivana greška prilikom obrade poruke: {}", message, e);
         }
     }
 

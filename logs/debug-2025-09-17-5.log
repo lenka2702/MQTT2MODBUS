@@ -1,0 +1,24 @@
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.main - Konfiguracija učitana: mqtt2modbus.config.Config@1df8da7a
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.file.FileHandler - Učitana konfiguracija: 1|publisher1/data
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.file.FileHandler - Učitana konfiguracija: 2|publisher1/data
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.file.FileHandler - Učitana konfiguracija: 3|publisher1/data
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.file.FileHandler - Učitana konfiguracija: 1|publisher2/data
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.file.FileHandler - Učitana konfiguracija: 2|publisher2/data
+[2025-09-17 12:09:46] [DEBUG] mqtt2modbus.file.FileHandler - Učitana konfiguracija: 3|publisher2/data
+[2025-09-17 12:09:46] [INFO ] mqtt2modbus.file.FileHandler - Teme na koje postoji subscribe: [publisher2/data, publisher1/data]
+[2025-09-17 12:09:47] [INFO ] mqtt2modbus.modbus.ModbusHandler - Uspešno povezan na Modbus 127.0.0.1:502 (slaveId=1)
+[2025-09-17 12:09:47] [INFO ] mqtt2modbus.main - ModbusHandler uspešno inicijalizovan.
+[2025-09-17 12:09:47] [DEBUG] mqtt2modbus.mqtt.MqttHandler - MqttHandler uspešno inicijalizovan za broker: tcp://localhost:1883
+[2025-09-17 12:09:47] [INFO ] mqtt2modbus.mqtt.MqttHandler - MQTT klijent uspešno konektovan.
+[2025-09-17 12:09:47] [INFO ] mqtt2modbus.mqtt.MqttHandler - Povezan na: tcp://localhost:1883 
+[2025-09-17 12:09:47] [DEBUG] mqtt2modbus.mqtt.MqttHandler - Subscribovan na temu: publisher2/data
+[2025-09-17 12:09:47] [DEBUG] mqtt2modbus.mqtt.MqttHandler - Subscribovan na temu: publisher1/data
+[2025-09-17 12:09:51] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-047","deviceType":3,"batteryLevel":22,"EnvironmentalData":{"fireRiskLevel":4,"values":[41,1,77,66,91]}}
+[2025-09-17 12:09:51] [INFO ] mqtt2modbus.modbus.ModbusHandler - Uspešno upisane vrednosti
+[2025-09-17 12:10:01] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-047","deviceType":0,"batteryLevel":21,"EnvironmentalData":{"fireRiskLevel":1,"values":[59,77,23,12,47]}}
+[2025-09-17 12:10:01] [ERROR] mqtt2modbus.file.FileHandler - Nema konfiguracije za primljenu poruku: deviceType=0, topic=publisher1/data
+[2025-09-17 12:10:11] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-047","deviceType":1,"batteryLevel":22,"EnvironmentalData":{"fireRiskLevel":3,"values":[26,17,68,49,89]}}
+[2025-09-17 12:10:21] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-047","deviceType":3,"batteryLevel":26,"EnvironmentalData":{"fireRiskLevel":5,"values":[89,13,30,78,58]}}
+[2025-09-17 12:10:31] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-089","deviceType":3,"batteryLevel":88,"EnvironmentalData":{"fireRiskLevel":0,"values":[81,91,16,7,52]}}
+[2025-09-17 12:10:41] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-089","deviceType":2,"batteryLevel":73,"EnvironmentalData":{"fireRiskLevel":4,"values":[50,76,84,73,19]}}
+[2025-09-17 12:10:51] [INFO ] mqtt2modbus.mqtt.MqttHandler - [publisher1/data] Primljena validna poruka: {"sensorId":"FST-001","deviceType":2,"batteryLevel":51,"EnvironmentalData":{"fireRiskLevel":1,"values":[12,84,94,43,66]}}

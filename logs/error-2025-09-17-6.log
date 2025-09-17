@@ -1,0 +1,4 @@
+[2025-09-17 12:11:00] [WARN ] mqtt2modbus.modbus.ModbusHandler - Neuspešno povezivanje na Modbus 127.0.0.1:502 - java.net.ConnectException: Connection refused: getsockopt: /127.0.0.1:502
+[2025-09-17 12:11:01] [WARN ] mqtt2modbus.modbus.ModbusHandler - Neuspešno povezivanje na Modbus 127.0.0.1:502 - java.net.ConnectException: Connection refused: getsockopt: /127.0.0.1:502
+[2025-09-17 12:11:01] [ERROR] mqtt2modbus.modbus.ModbusHandler - Modbus nije povezan.
+[2025-09-17 12:11:11] [ERROR] mqtt2modbus.modbus.ModbusHandler - Modbus nije povezan.

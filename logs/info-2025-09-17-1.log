@@ -1,0 +1,16 @@
+[2025-09-17 09:19:03] [INFO ] mqtt2modbus.file.FileHandler - Teme na koje postoji subscribe: [publisher2/data, publisher1/data]
+[2025-09-17 09:19:04] [INFO ] mqtt2modbus.main - ModbusHandler uspešno inicijalizovan.
+[2025-09-17 09:19:04] [FATAL] mqtt2modbus.mqtt.MqttHandler - Greška prilikom konektovanja na MQTT broker
+org.eclipse.paho.client.mqttv3.MqttException: Unable to connect to server
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:80) ~[org.eclipse.paho.client.mqttv3-1.2.5.jar:?]
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:724) ~[org.eclipse.paho.client.mqttv3-1.2.5.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1447) ~[?:?]
+Caused by: java.net.ConnectException: Connection refused: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:628) ~[?:?]
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:533) ~[?:?]
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:583) ~[?:?]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:282) ~[?:?]
+	at java.base/java.net.Socket.connect(Socket.java:665) ~[?:?]
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:74) ~[org.eclipse.paho.client.mqttv3-1.2.5.jar:?]
+	... 2 more

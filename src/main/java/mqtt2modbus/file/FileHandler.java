@@ -4,6 +4,8 @@ import mqtt2modbus.modbus.ModbusHandler;
 import mqtt2modbus.models.FileData;
 import mqtt2modbus.models.SensorData;
 import mqtt2modbus.models.SensorInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.io.*;
@@ -13,8 +15,8 @@ import java.util.*;
 
 public class FileHandler implements IFileHandler {
 
+    private static final Logger logger = LogManager.getLogger(FileHandler.class);
     private final Map<String, FileData> dataMap = new HashMap<>();
-
 
     @Override
     public void readFile(String filename) throws IOException {
@@ -34,11 +36,14 @@ public class FileHandler implements IFileHandler {
                 filedata.setNumReg(Integer.parseInt(data[3].trim()));
                 filedata.setSlaveID(Integer.parseInt(data[4].trim()));
 
-
-                String key = filedata.getDeviceType() + "|" + filedata.getTopic(); //kljuc ce biti device|topic
+                String key = filedata.getDeviceType() + "|" + filedata.getTopic();
                 dataMap.put(key, filedata);
 
-            }catch (NumberFormatException e){}
+                logger.debug("Učitana konfiguracija: {}", key);
+
+            }catch (NumberFormatException e){
+                logger.warn("Nevalidan red u fajlu '{}': {}", filename, line, e);
+            }
         }
 
     }
@@ -57,9 +62,9 @@ public class FileHandler implements IFileHandler {
             if(valuesSensorInfo.length <= allowedRegs)
                 modbusHandler.write(startAdr, valuesSensorInfo);
             else
-                System.out.println("Poslato vise vrednsoti nego sto konfiguracija podrzava");
+                logger.warn("Poslato vise vrednosti nego sto konfiguracija podrzava za topic={} (dozvoljeno={}, dobijeno={})", topic, allowedRegs, valuesSensorInfo.length);
         }else
-            System.out.println("Nema konfiguracije za primljenu poruku");
+            logger.error("Nema konfiguracije za primljenu poruku: deviceType={}, topic={}", deviceType, topic);
 
     }
 
@@ -69,7 +74,7 @@ public class FileHandler implements IFileHandler {
         for (FileData fileData : dataMap.values()) {
             topics.add(fileData.getTopic().trim());
         }
-        System.out.println("Teme na koje posotji subsrcibe: " + topics);
+        logger.info("Teme na koje postoji subscribe: {}", topics);
         return topics.toArray(new String[0]);
 
     }
