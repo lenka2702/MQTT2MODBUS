@@ -1,3 +1,0 @@
-[2025-09-17 12:07:32] [ERROR] mqtt2modbus.file.FileHandler - Nema konfiguracije za primljenu poruku: deviceType=0, topic=publisher1/data
-[2025-09-17 12:07:42] [ERROR] mqtt2modbus.file.FileHandler - Nema konfiguracije za primljenu poruku: deviceType=0, topic=publisher1/data
-[2025-09-17 12:08:22] [ERROR] mqtt2modbus.file.FileHandler - Nema konfiguracije za primljenu poruku: deviceType=0, topic=publisher1/data
